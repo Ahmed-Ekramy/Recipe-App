@@ -6,7 +6,6 @@ import 'package:recipe/features/details/presentation/widgets/search_result_item.
 
 class SearchView extends StatelessWidget {
   const SearchView({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
