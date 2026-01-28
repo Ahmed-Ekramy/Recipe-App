@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:recipe/features/details/presentation/pages/recipe_details.dart';
 
 import 'features/home/presentation/pages/home_tab_view.dart';
 import 'main.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       ),
       debugShowCheckedModeBanner:  false,
-      home: HomeTabView(),
+      home: RecipeDetails(),
     );
   }
 }
