@@ -12,5 +12,9 @@ class AppImages{
   static String noodles="assets/svg/noodles-svgrepo-com.svg";
   static String vegetarian="assets/svg/carrot-svgrepo-com.svg";
   static String baking="assets/svg/muffin-svgrepo-com.svg";
+  static String kcal="assets/svg/burn-solid-svgrepo-com.svg";
+  static String price="assets/svg/price-tag-price-svgrepo-com.svg";
+  static String time="assets/svg/time-svgrepo-com.svg";
+  static String serving="assets/svg/waiter-serving-a-drink-on-a-tray-svgrepo-com.svg";
 
 }
