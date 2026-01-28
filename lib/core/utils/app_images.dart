@@ -16,5 +16,8 @@ class AppImages{
   static String price="assets/svg/price-tag-price-svgrepo-com.svg";
   static String time="assets/svg/time-svgrepo-com.svg";
   static String serving="assets/svg/waiter-serving-a-drink-on-a-tray-svgrepo-com.svg";
+  static String delete="assets/svg/delete-svgrepo-com.svg";
+  static String search="assets/svg/search-alt-2-svgrepo-com (1).svg";
+  static String filter="assets/svg/filter-svgrepo-com.svg";
 
 }
