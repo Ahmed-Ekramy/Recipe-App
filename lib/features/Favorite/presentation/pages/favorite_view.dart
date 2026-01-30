@@ -7,28 +7,16 @@ class FavoriteView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          "Favorite",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        leading:  Icon(Icons.arrow_back_ios_new_outlined),
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
       ),
-      body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 2,
-          mainAxisSpacing: 2,
-        ),
-        itemCount: 5,
-        itemBuilder: (context, index) => FavItem(),
+      itemCount: 5,
+      itemBuilder: (context, index) => FavItem(),
 
 
-      )
     );
   }
 }

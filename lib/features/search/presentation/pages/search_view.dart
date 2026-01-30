@@ -8,83 +8,68 @@ class SearchView extends StatelessWidget {
   const SearchView({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          "Search",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.black),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomTextFormField(
-                cursorColor: Colors.orange,
-                backgroundColor: Colors.orange.shade50,
-                maxLines: 1,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.search,
-                hintText: "Search Recipe",
-                hintColor: Colors.brown,
-                focusedBorderColor: Colors.orange,
-                enabledBorderColor: Colors.white70,
-                onFieldSubmitted: (value) {},
-                prefixIcon: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: Center(
-                    child: SvgPicture.asset(
-                      AppImages.search,
-                      width: 25,
-                      height: 25,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.orange,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  ),
-                ),
-                suffixIcon: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: Center(
-                    child: SvgPicture.asset(
-                      AppImages.filter,
-                      width: 25,
-                      height: 25,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.brown,
-                        BlendMode.srcIn,
-                      ),
+    return  Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomTextFormField(
+              cursorColor: Colors.orange,
+              backgroundColor: Colors.orange.shade50,
+              maxLines: 1,
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.search,
+              hintText: "Search Recipe",
+              hintColor: Colors.brown,
+              focusedBorderColor: Colors.orange,
+              enabledBorderColor: Colors.white70,
+              onFieldSubmitted: (value) {},
+              prefixIcon: SizedBox(
+                width: 30,
+                height: 30,
+                child: Center(
+                  child: SvgPicture.asset(
+                    AppImages.search,
+                    width: 25,
+                    height: 25,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.orange,
+                      BlendMode.srcIn,
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              Text(
-                " Search Result",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              suffixIcon: SizedBox(
+                width: 30,
+                height: 30,
+                child: Center(
+                  child: SvgPicture.asset(
+                    AppImages.filter,
+                    width: 25,
+                    height: 25,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.brown,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
               ),
-              SizedBox(height: 20),
-               ListView.separated(
-                itemCount: 20,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => SearchResultItem(),
-                separatorBuilder: (context, index) => SizedBox(height: 10),
-                             ),
-            ],
-          ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              " Search Result",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            ListView.separated(
+              itemCount: 20,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) => SearchResultItem(),
+              separatorBuilder: (context, index) => SizedBox(height: 10),
+            ),
+          ],
         ),
       ),
     );

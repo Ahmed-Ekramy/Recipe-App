@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:recipe/config/routes/routes.dart';
 import 'package:recipe/features/Favorite/presentation/pages/favorite_view.dart';
+import 'package:recipe/features/home/presentation/pages/home_tab_view.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -13,7 +15,8 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       ),
       debugShowCheckedModeBanner:  false,
-      home: FavoriteView(),
+      onGenerateRoute: (settings) => AppRoutes.onGenerate(settings),
+      initialRoute: Routes.layout,
     );
   }
 }
