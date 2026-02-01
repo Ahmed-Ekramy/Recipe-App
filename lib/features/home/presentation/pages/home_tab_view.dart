@@ -1,5 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recipe/core/api/dio_consumer.dart';
 import 'package:recipe/core/utils/app_images.dart';
+import 'package:recipe/features/home/data/data_sources/home_remote.dart';
+import 'package:recipe/features/home/presentation/manager/cubit.dart';
+import 'package:recipe/features/home/presentation/manager/states.dart';
 import 'package:recipe/features/home/presentation/widgets/drink_item.dart';
 import 'package:recipe/features/home/presentation/widgets/menu_item.dart';
 import 'package:recipe/features/home/presentation/widgets/popular_breakfast_item.dart';
@@ -20,158 +26,203 @@ class HomeTabView extends StatelessWidget {
     MenuModel("Vegetarian", AppImages.vegetarian),
     MenuModel("Baking", AppImages.baking),
   ];
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 200,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.orange.shade300, Colors.orange.shade50],
-                ),
-              ),
-              child: Image.asset(AppImages.surface),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Simple way to find tasty food",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20),
-            SizedBox(
-              height: 120,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => SizedBox(width: 20),
-                scrollDirection: Axis.horizontal,
-                itemCount: menuList.length,
-                itemBuilder: (context, index) =>
-                    MenuItem(menuList: menuList, index: index),
-              ),
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Popular Breakfast",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "See all",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.orange.shade300,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              height: 250,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => PopularBreakfastItem(),
-                separatorBuilder: (context, index) => SizedBox(width: 10),
-                itemCount: 5,
-              ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Popular Breakfast",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "See all",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.orange.shade300,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              height: 250,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => PopularBreakfastItem(),
-                separatorBuilder: (context, index) => SizedBox(width: 10),
-                itemCount: 5,
-              ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Popular Breakfast",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "See all",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.orange.shade300,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              height: 250,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => PopularBreakfastItem(),
-                separatorBuilder: (context, index) => SizedBox(width: 10),
-                itemCount: 5,
-              ),
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Popular Drink",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "See all",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.orange.shade300,
-                  ),
-                ),
-              ],
-            ),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) => DrinkItem(),
-              separatorBuilder: (context, index) => SizedBox(height: 10),
-              itemCount: 5,
-            ),
+      child: BlocProvider(
+        create: (context) =>
+            HomeTabCubit(HomeRemote(api: DioConsumer(dio: Dio())))
+              ..breakFastRecipe()..lunchRecipe()..dinnerRecipe()..drinkRecipe(),
+        child: BlocBuilder<HomeTabCubit, HomeTabState>(
+          builder: (context, state) {
+            var cubit = HomeTabCubit.get(context);
+            var breakFastList = cubit.breakFastList;
+            var lunchList = cubit.lunchList;
+            var dinnerList = cubit.dinnerList;
+            var drinkList = cubit.drinkList;
 
-          ],
+            if (state is BreakFastLoadingState) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (state is BreakFastSuccessState || state is LunchSuccessState || state is DinnerSuccessState || state is DrinkSuccessState) {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 200,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.orange.shade300,
+                            Colors.orange.shade50,
+                          ],
+                        ),
+                      ),
+                      child: Image.asset(AppImages.surface),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Simple way to find tasty food",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    SizedBox(
+                      height: 120,
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) =>
+                            SizedBox(width: 20),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: menuList.length,
+                        itemBuilder: (context, index) =>
+                            MenuItem(menuList: menuList, index: index),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Popular Breakfast",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "See all",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange.shade300,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      height: 200,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => PopularBreakfastItem( breakFastList, index),
+                        separatorBuilder: (context, index) =>
+                            SizedBox(width: 10),
+                        itemCount: 10,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Popular Lunch",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "See all",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange.shade300,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      height: 200,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => PopularBreakfastItem( lunchList, index),
+                        separatorBuilder: (context, index) =>
+                            SizedBox(width: 10),
+                        itemCount: 5,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Popular Dinner",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "See all",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange.shade300,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      height: 200,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => PopularBreakfastItem( dinnerList, index),
+                        separatorBuilder: (context, index) =>
+                            SizedBox(width: 10),
+                        itemCount: 5,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Popular Drink",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "See all",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange.shade300,
+                          ),
+                        ),
+                      ],
+                    ),
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) => DrinkItem( drinkList, index),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 10),
+                      itemCount: 5,
+                    ),
+                  ],
+                ),
+              );
+            }
+            if (state is BreakFastErrorState) {
+              return Center(child: Text(state.errMessage));
+            }
+            return Container();
+          },
         ),
       ),
     );
   }
 }
-
-

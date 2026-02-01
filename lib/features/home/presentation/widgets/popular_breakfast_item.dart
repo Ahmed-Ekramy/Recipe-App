@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:recipe/core/shared_widget/cached_recipe_image.dart';
 import 'package:recipe/core/utils/app_images.dart';
+import 'package:recipe/features/home/domain/entities/random_entity.dart';
 
 class PopularBreakfastItem extends StatelessWidget {
-  const PopularBreakfastItem({super.key});
+ final  List<dynamic> randomEntity;
+  final int index;
+  const PopularBreakfastItem( this.randomEntity,this.index, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,12 +15,12 @@ class PopularBreakfastItem extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadiusGeometry.circular(10),
-          child: Image.asset(
-            AppImages.recipe,
-            fit: BoxFit.cover,
+          child: CachedRecipeImage(
+            height:  double.infinity ,
             width: 200,
-            height: 250,
-          ),
+            imageUrl: "${randomEntity[index].image}",
+            fit: BoxFit.cover,
+          )
         ),
         Positioned(
           top: 10,
@@ -41,7 +45,7 @@ class PopularBreakfastItem extends StatelessWidget {
               color: Colors.black38,
             ),
             child: Text(
-              "30 mins",
+              "${randomEntity[index].readyInMinutes} mins",
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -53,27 +57,23 @@ class PopularBreakfastItem extends StatelessWidget {
         Positioned(
           bottom: 15,
           left: 10,
-          right: 0,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Fried Potatoes",
+          right: 10,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.black38,
+              ),
+              child: Text(
+                "${randomEntity[index].title}",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              Text(
-                "Fried Potatoes | 120 kcal",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ],
