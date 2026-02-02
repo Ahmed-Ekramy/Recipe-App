@@ -13,7 +13,6 @@ class HomeRemote implements HomeDataSource {
   @override
   Future<Either<String, List<Recipe>>> getRecipes(String type, int num) async {
     try {
-       print("xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
       final response = await api.get(
         EndPoint.recipes,
         queryParameters: {"number": num, "include-tags": type},

@@ -17,7 +17,7 @@ class PopularBreakfastItem extends StatelessWidget {
           borderRadius: BorderRadiusGeometry.circular(10),
           child: CachedRecipeImage(
             height:  double.infinity ,
-            width: 200,
+            width: 220,
             imageUrl: "${randomEntity[index].image}",
             fit: BoxFit.cover,
           )

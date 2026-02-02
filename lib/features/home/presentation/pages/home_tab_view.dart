@@ -52,7 +52,7 @@ class HomeTabView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 200,
+                      height: 220,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -110,13 +110,13 @@ class HomeTabView extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     SizedBox(
-                      height: 200,
+                      height: 220,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) => PopularBreakfastItem( breakFastList, index),
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 10),
-                        itemCount: 10,
+                        itemCount: breakFastList.length,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -142,13 +142,17 @@ class HomeTabView extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     SizedBox(
-                      height: 200,
+                      height: 220,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => PopularBreakfastItem( lunchList, index),
+                        itemBuilder: (context, index) => InkWell(
+                            onTap: (){
+                              Navigator.pushNamed(context, 'recipeDetails' ,arguments: lunchList[index]);
+                            },
+                            child: PopularBreakfastItem( lunchList, index)),
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 10),
-                        itemCount: 5,
+                        itemCount: lunchList.length,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -174,13 +178,13 @@ class HomeTabView extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     SizedBox(
-                      height: 200,
+                      height: 220,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) => PopularBreakfastItem( dinnerList, index),
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 10),
-                        itemCount: 5,
+                        itemCount: dinnerList.length,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -207,10 +211,14 @@ class HomeTabView extends StatelessWidget {
                     ListView.separated(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) => DrinkItem( drinkList, index),
+                      itemBuilder: (context, index) => InkWell(
+                          onTap: (){
+                            Navigator.pushNamed(context, 'recipeDetails' ,arguments: drinkList[index]);
+                          },
+                          child: DrinkItem( drinkList, index)),
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 10),
-                      itemCount: 5,
+                      itemCount: drinkList.length,
                     ),
                   ],
                 ),

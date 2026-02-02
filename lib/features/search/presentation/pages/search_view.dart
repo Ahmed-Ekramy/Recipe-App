@@ -40,17 +40,22 @@ class SearchView extends StatelessWidget {
                   ),
                 ),
               ),
-              suffixIcon: SizedBox(
-                width: 30,
-                height: 30,
-                child: Center(
-                  child: SvgPicture.asset(
-                    AppImages.filter,
-                    width: 25,
-                    height: 25,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.brown,
-                      BlendMode.srcIn,
+              suffixIcon: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, 'filter');
+                },
+                child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      AppImages.filter,
+                      width: 25,
+                      height: 25,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.brown,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ),
