@@ -29,8 +29,7 @@ class FavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(2),
       margin: EdgeInsets.all(10),
       decoration:  BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -45,10 +44,10 @@ class FavItem extends StatelessWidget {
             children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(AppImages.recipe, width: double.infinity, height: double.infinity, fit: BoxFit.cover)),
+                  child: Image.asset(AppImages.recipe, width: 500, height: 200, fit: BoxFit.cover)),
               Positioned(
-                top: 10,
-                right: 10,
+                top: 5,
+                right: 5,
                 child: Container(
                   alignment: Alignment.center,
                   width: 35,
@@ -67,30 +66,6 @@ class FavItem extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 10,
-                left: 10,
-                child:  Row(
-                  children: [
-                    SvgPicture.asset(
-                      AppImages.time,
-                      width: 20,
-                      height: 20,
-                      colorFilter: ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
-                      ),
-    
-                    ),
-    
-                    Text("12 MIN", style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),),
-                  ],
-                ),
-              )
             ],
           ),
         ),
@@ -103,12 +78,24 @@ class FavItem extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        Text("\$20/serve", style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: Colors.brown,
-        ),),
-    
+          Row(
+            children: [
+              SvgPicture.asset(
+                AppImages.time,
+                width: 20,
+                height: 20,
+                colorFilter: ColorFilter.mode(
+                  Colors.orange,
+                  BlendMode.srcIn,
+                ),
+
+              ),
+              Text("12 MIN", style: TextStyle(
+                fontSize: 13,
+                color: Colors.black,
+              ),),
+            ],
+          ),
       ],),
     );
   }

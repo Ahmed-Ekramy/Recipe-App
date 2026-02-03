@@ -17,7 +17,6 @@ class HomeRemote implements HomeDataSource {
         EndPoint.recipes,
         queryParameters: {"number": num, "include-tags": type},
       );
-      print("hhhhhhhhhhhhhhhhhhhhhhhh${response.runtimeType}");
        final randomResponse =
        RandomResponseModel.fromJson(response);
        return Right(randomResponse.recipes ?? []);

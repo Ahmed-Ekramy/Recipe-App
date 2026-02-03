@@ -11,62 +11,47 @@ class PopularBreakfastItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadiusGeometry.circular(10),
-          child: CachedRecipeImage(
-            height:  double.infinity ,
-            width: 220,
-            imageUrl: "${randomEntity[index].image}",
-            fit: BoxFit.cover,
-          )
-        ),
-        Positioned(
-          top: 10,
-          right: 10,
-          child: SvgPicture.asset(
-            AppImages.heartAdd,
-            fit: BoxFit.contain,
-            width: 30,
-            height: 30,
-            colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, 'recipeDetails',arguments: {
+          'id': randomEntity[index].id,
+        });
+      },
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadiusGeometry.circular(10),
+            child: CachedRecipeImage(
+              height:  double.infinity ,
+              width: 220,
+              imageUrl: "${randomEntity[index].image}",
+              fit: BoxFit.cover,
+            )
           ),
-        ),
-        Positioned(
-          top: 10,
-          left: 10,
-          child: Container(
-            alignment: Alignment.center,
-            width: 100,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Colors.black38,
-            ),
-            child: Text(
-              "${randomEntity[index].readyInMinutes} mins",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+          Positioned(
+            top: 10,
+            right: 10,
+            child: SvgPicture.asset(
+              AppImages.heartAdd,
+              fit: BoxFit.contain,
+              width: 30,
+              height: 30,
+              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
             ),
           ),
-        ),
-        Positioned(
-          bottom: 15,
-          left: 10,
-          right: 10,
-          child: Align(
-            alignment: Alignment.centerLeft,
+          Positioned(
+            top: 10,
+            left: 10,
             child: Container(
+              alignment: Alignment.center,
+              width: 100,
+              height: 30,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 color: Colors.black38,
               ),
               child: Text(
-                "${randomEntity[index].title}",
+                "${randomEntity[index].readyInMinutes} mins",
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -75,8 +60,30 @@ class PopularBreakfastItem extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      ],
+          Positioned(
+            bottom: 15,
+            left: 10,
+            right: 10,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.black38,
+                ),
+                child: Text(
+                  "${randomEntity[index].title}",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

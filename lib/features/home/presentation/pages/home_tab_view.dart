@@ -116,7 +116,7 @@ class HomeTabView extends StatelessWidget {
                         itemBuilder: (context, index) => PopularBreakfastItem( breakFastList, index),
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 10),
-                        itemCount: breakFastList.length,
+                        itemCount:breakFastList.length ,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -152,7 +152,7 @@ class HomeTabView extends StatelessWidget {
                             child: PopularBreakfastItem( lunchList, index)),
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 10),
-                        itemCount: lunchList.length,
+                        itemCount:lunchList.length ,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -184,7 +184,7 @@ class HomeTabView extends StatelessWidget {
                         itemBuilder: (context, index) => PopularBreakfastItem( dinnerList, index),
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 10),
-                        itemCount: dinnerList.length,
+                        itemCount:10,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -218,7 +218,7 @@ class HomeTabView extends StatelessWidget {
                           child: DrinkItem( drinkList, index)),
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 10),
-                      itemCount: drinkList.length,
+                      itemCount:drinkList.length,
                     ),
                   ],
                 ),

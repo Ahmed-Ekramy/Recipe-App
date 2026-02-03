@@ -5,6 +5,8 @@ import 'package:recipe/core/api/api_consumer.dart';
 import 'package:recipe/core/api/dio_consumer.dart';
 import 'package:recipe/core/utils/componants.dart';
 import 'package:recipe/features/Favorite/presentation/pages/favorite_view.dart';
+import 'package:recipe/features/details/data/data_sources/details_remote.dart';
+import 'package:recipe/features/details/presentation/manager/cubit.dart';
 import 'package:recipe/features/details/presentation/pages/recipe_details.dart';
 import 'package:recipe/features/home/data/data_sources/home_remote.dart';
 import 'package:recipe/features/home/presentation/manager/cubit.dart';
@@ -13,6 +15,7 @@ import 'package:recipe/features/home_layout/presentation/manager/cubit.dart';
 import 'package:recipe/features/home_layout/presentation/pages/home_layout_view.dart';
 import 'package:recipe/features/search/presentation/pages/filter_search_view.dart';
 import 'package:recipe/features/search/presentation/pages/search_view.dart';
+import 'package:recipe/features/home/domain/entities/random_entity.dart';
 
 class Routes {
   static const String signUp = "signUp";
@@ -62,9 +65,18 @@ class AppRoutes {
           },
         );
       case (Routes.recipeDetails):
+        final args = routeSettings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (context) {
-            return const RecipeDetails();
+            int id = args['id'];
+            return BlocProvider(
+              create: (context) =>
+                  DetailsCubit(DetailsRemote(DioConsumer(dio: Dio())))
+                    ..getDetails(id)..getEquipment(id)..getNutrition(id)..getSimilar(id),
+              child: RecipeDetails(
+                 id: id,
+              ),
+            );
           },
         );
       default:

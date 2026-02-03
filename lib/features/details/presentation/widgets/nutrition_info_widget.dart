@@ -3,13 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class NutritionInfoWidget extends StatelessWidget {
-  final int calories;
-  final int caloriesTotal;
-  final int protein;
+  final num calories;
+  final num caloriesTotal;
+  final num protein;
   final int proteinTotal;
-  final int carbs;
+  final num carbs;
   final int carbsTotal;
-  final int fats;
+  final num fats;
   final int fatsTotal;
 
   const NutritionInfoWidget({
@@ -27,18 +27,9 @@ class NutritionInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            spreadRadius: 0,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Row(
         children: [
@@ -114,7 +105,7 @@ class NutritionInfoWidget extends StatelessWidget {
 
   Widget _buildNutrientBar(
     String label,
-    int value,
+    num value,
     int total,
     Color color,
   ) {
