@@ -53,7 +53,9 @@ class DetailsRemote implements DetailsDataSource {
   @override
   Future<Either<String, List<SimilarResponseModel>>> getSimilar(int id) async {
     try {
-      var response = await apiConsumer.get(EndPoint.recipesSimilar(id));
+      var response = await apiConsumer.get(EndPoint.recipesSimilar(id),queryParameters : {
+        "number": 50,
+      });
       List<SimilarResponseModel> similarRecipes =
           List<SimilarResponseModel>.from(
         response.map((e) => SimilarResponseModel.fromJson(e)),

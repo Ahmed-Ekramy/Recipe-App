@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:recipe/config/routes/routes.dart';
 import 'package:recipe/core/shared_widget/cached_recipe_image.dart';
 import 'package:recipe/core/utils/app_images.dart';
 import 'package:recipe/features/details/presentation/manager/cubit.dart';
@@ -355,34 +356,43 @@ class RecipeDetails extends StatelessWidget {
                             ),
                           ),
                           Spacer(),
-                          Row(
-                            children: [
-                              Text(
-                                "View All",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.orange,
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.viewAllSimilar,
+                                arguments: similarResponseModel,
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  "View All",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange,
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.symmetric(horizontal: 5),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 5,
-                                  vertical: 5,
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5,
+                                    vertical: 5,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade50,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: Colors.orange,
+                                    size: 20,
+                                  ),
                                 ),
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.shade50,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  color: Colors.orange,
-                                  size: 20,
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),

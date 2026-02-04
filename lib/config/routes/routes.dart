@@ -6,11 +6,15 @@ import 'package:recipe/core/api/dio_consumer.dart';
 import 'package:recipe/core/utils/componants.dart';
 import 'package:recipe/features/Favorite/presentation/pages/favorite_view.dart';
 import 'package:recipe/features/details/data/data_sources/details_remote.dart';
+import 'package:recipe/features/details/data/models/similar-model.dart';
 import 'package:recipe/features/details/presentation/manager/cubit.dart';
 import 'package:recipe/features/details/presentation/pages/recipe_details.dart';
+import 'package:recipe/features/details/presentation/pages/view_all_similar.dart';
 import 'package:recipe/features/home/data/data_sources/home_remote.dart';
 import 'package:recipe/features/home/presentation/manager/cubit.dart';
 import 'package:recipe/features/home/presentation/pages/home_tab_view.dart';
+import 'package:recipe/features/home/presentation/pages/view_all.dart';
+import 'package:recipe/features/home/presentation/pages/view_all_category.dart';
 import 'package:recipe/features/home_layout/presentation/manager/cubit.dart';
 import 'package:recipe/features/home_layout/presentation/pages/home_layout_view.dart';
 import 'package:recipe/features/search/presentation/pages/filter_search_view.dart';
@@ -26,6 +30,9 @@ class Routes {
   static const String favorite = "favorite";
   static const String filter = "filter";
   static const String recipeDetails = "recipeDetails";
+  static const String viewAll = "viewAll";
+  static const String viewAllSimilar = "viewAllSimilar";
+  static const String viewAllCategory = "viewAllCategory";
 }
 
 class AppRoutes {
@@ -40,6 +47,25 @@ class AppRoutes {
             );
           },
         );
+      case (Routes.viewAll):
+        final args = routeSettings.arguments as List<RandomEntity>;
+        return MaterialPageRoute(builder: (context) => ViewAll(args: args));
+      case (Routes.viewAllCategory):
+        final args = routeSettings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) =>
+                HomeTabCubit(HomeRemote(api: DioConsumer(dio: Dio())))
+                  ..categoryRecipe( args['category']),
+            child: ViewAllCategory(),
+          ),
+        );
+      case (Routes.viewAllSimilar):
+        final args = routeSettings.arguments as List<SimilarResponseModel>;
+        return MaterialPageRoute(
+          builder: (context) => ViewAllSimilar(args: args),
+        );
+
       case (Routes.home):
         return MaterialPageRoute(
           builder: (context) {
@@ -72,10 +98,11 @@ class AppRoutes {
             return BlocProvider(
               create: (context) =>
                   DetailsCubit(DetailsRemote(DioConsumer(dio: Dio())))
-                    ..getDetails(id)..getEquipment(id)..getNutrition(id)..getSimilar(id),
-              child: RecipeDetails(
-                 id: id,
-              ),
+                    ..getDetails(id)
+                    ..getEquipment(id)
+                    ..getNutrition(id)
+                    ..getSimilar(id),
+              child: RecipeDetails(id: id),
             );
           },
         );
