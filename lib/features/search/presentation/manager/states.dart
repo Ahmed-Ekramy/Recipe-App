@@ -1,6 +1,14 @@
-class LoginState{}
-class LoginInitialState extends LoginState{}
-class VisibilityIconState extends LoginState{}
-class LoginLoadingState extends LoginState{}
-class LoginSuccessState extends LoginState{}
-class LoginErrorState extends LoginState{}
+import 'package:recipe/features/search/data/models/autocomplete_model.dart';
+
+class SearchState{}
+class IntalSearchState extends SearchState{}
+class LoadingAutoSearchState extends SearchState{}
+class SuccessAutoSearchState extends SearchState{
+  final List<AutocompleteResponseModel> autoSearch;
+  SuccessAutoSearchState(this.autoSearch);
+}
+class ErrorAutoSearchState extends SearchState{
+  final String error;
+  ErrorAutoSearchState(this.error);
+
+}

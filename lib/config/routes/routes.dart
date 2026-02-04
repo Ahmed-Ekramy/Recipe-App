@@ -17,6 +17,7 @@ import 'package:recipe/features/home/presentation/pages/view_all.dart';
 import 'package:recipe/features/home/presentation/pages/view_all_category.dart';
 import 'package:recipe/features/home_layout/presentation/manager/cubit.dart';
 import 'package:recipe/features/home_layout/presentation/pages/home_layout_view.dart';
+import 'package:recipe/features/search/presentation/manager/cubit.dart';
 import 'package:recipe/features/search/presentation/pages/filter_search_view.dart';
 import 'package:recipe/features/search/presentation/pages/search_view.dart';
 import 'package:recipe/features/home/domain/entities/random_entity.dart';
@@ -53,12 +54,13 @@ class AppRoutes {
       case (Routes.viewAllCategory):
         final args = routeSettings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) =>
+          builder: (context) =>
+              BlocProvider(
+                create: (context) =>
                 HomeTabCubit(HomeRemote(api: DioConsumer(dio: Dio())))
-                  ..categoryRecipe( args['category']),
-            child: ViewAllCategory(),
-          ),
+                  ..categoryRecipe(args['category']),
+                child: ViewAllCategory(),
+              ),
         );
       case (Routes.viewAllSimilar):
         final args = routeSettings.arguments as List<SimilarResponseModel>;
@@ -75,7 +77,7 @@ class AppRoutes {
       case (Routes.search):
         return MaterialPageRoute(
           builder: (context) {
-            return const SearchView();
+            return SearchView();
           },
         );
       case (Routes.favorite):
@@ -97,11 +99,11 @@ class AppRoutes {
             int id = args['id'];
             return BlocProvider(
               create: (context) =>
-                  DetailsCubit(DetailsRemote(DioConsumer(dio: Dio())))
-                    ..getDetails(id)
-                    ..getEquipment(id)
-                    ..getNutrition(id)
-                    ..getSimilar(id),
+              DetailsCubit(DetailsRemote(DioConsumer(dio: Dio())))
+                ..getDetails(id)
+                ..getEquipment(id)
+                ..getNutrition(id)
+                ..getSimilar(id),
               child: RecipeDetails(id: id),
             );
           },
