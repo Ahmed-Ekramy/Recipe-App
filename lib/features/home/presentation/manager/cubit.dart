@@ -11,6 +11,8 @@ class HomeTabCubit extends Cubit<HomeTabState> {
   List<dynamic> lunchList = [];
   List<dynamic> dinnerList = [];
   List<dynamic> drinkList = [];
+  List<dynamic> categoryList = [];
+
 
   HomeTabCubit(this.homeDataSource) : super(HomeTabState());
 
@@ -26,7 +28,19 @@ class HomeTabCubit extends Cubit<HomeTabState> {
       (r) {
         breakFastList = r;
         emit(BreakFastSuccessState(r));
-        print( " title${r.first.title}");
+      },
+    );
+  }
+  void categoryRecipe( String category) async {
+    emit(CategoryLoadingState());
+    HomeRepo homeRepo = HomeRepoImp(homeDataSource: homeDataSource);
+    RandomUseCase randomUseCase = RandomUseCase(homeRepo);
+    var response = await randomUseCase.call(category, 50);
+    response.fold(
+      (l) => emit(CategoryErrorState(l)),
+      (r) {
+        categoryList = r;
+        emit(CategorySuccessState(r));
       },
     );
   }
@@ -40,7 +54,6 @@ class HomeTabCubit extends Cubit<HomeTabState> {
       (r) {
         lunchList = r;
         emit(LunchSuccessState(r));
-        print( " title${r.first.title}");
       },
     );
   }
@@ -54,7 +67,6 @@ class HomeTabCubit extends Cubit<HomeTabState> {
       (r) {
         dinnerList = r;
         emit(DinnerSuccessState(r));
-        print( " title${r.first.title}");
       },
     );
   }
@@ -68,7 +80,6 @@ class HomeTabCubit extends Cubit<HomeTabState> {
       (r) {
         drinkList = r;
         emit(DrinkSuccessState(r));
-        print( " title${r.first.title}");
       },
     );
   }

@@ -17,7 +17,6 @@ class RandomResponseModel   {
 }
 
 class Recipe extends RandomEntity {
-  final int? id;
   final String? imageType;
   final int? servings;
   final String? sourceUrl;
@@ -56,8 +55,8 @@ class Recipe extends RandomEntity {
     super.image,
     super.title,
     super.readyInMinutes,
+    super.id,
 
-    this.id,
     this.imageType,
     this.servings,
     this.sourceUrl,

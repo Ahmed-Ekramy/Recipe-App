@@ -1,470 +1,431 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:recipe/config/routes/routes.dart';
+import 'package:recipe/core/shared_widget/cached_recipe_image.dart';
 import 'package:recipe/core/utils/app_images.dart';
+import 'package:recipe/features/details/presentation/manager/cubit.dart';
+import 'package:recipe/features/details/presentation/manager/states.dart';
 import 'package:recipe/features/details/presentation/widgets/info_item.dart';
 import 'package:recipe/features/details/presentation/widgets/kitchen_gear_needed.dart';
 import 'package:recipe/features/details/presentation/widgets/nutrition_info_widget.dart';
+import 'package:recipe/features/details/presentation/widgets/similar_item.dart';
+import 'package:recipe/features/details/presentation/widgets/instructions_widget.dart';
 
 class RecipeDetails extends StatelessWidget {
-  const RecipeDetails({super.key});
+  final int id;
+
+  const RecipeDetails({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
-                    ),
-                    child: Image.asset(AppImages.recipe, fit: BoxFit.cover),
-                  ),
-                  Positioned(
-                    top: 20,
-                    left: 20,
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.black38,
-                      ),
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 20,
-                    right: 20,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.black38,
-                      ),
-                      alignment: Alignment.center,
-                      child: SvgPicture.asset(
-                        AppImages.heartAdd,
-                        fit: BoxFit.contain,
-                        width: 30,
-                        height: 30,
-                        colorFilter: ColorFilter.mode(
-                          Colors.white,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 20,
-                    left: 20,
-                    right: 20,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+        child: BlocBuilder<DetailsCubit, DetailsState>(
+          builder: (context, state) {
+            if (state is DetailsSuccessState ||
+                state is EquipmentSuccessState ||
+                state is NutritionSuccessState ||
+                state is SimilarSuccessState || state is ChangeInstructionExpandedState) {
+
+              var cubit = DetailsCubit.get(context);
+              var detailsResponseModel = cubit.detailsResponseModel;
+              var equipmentResponseModel =
+                  cubit.equipmentResponseModel?.equipment;
+              var nutritionResponseModel = cubit.nutritionResponseModel;
+              var similarResponseModel = cubit.similarResponseModel;
+              return CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Stack(
+                      clipBehavior: Clip.none,
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 60,
+                        ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                          ),
+                          child: CachedRecipeImage(
+                            imageUrl: detailsResponseModel?.image ?? "",
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 20,
+                          left: 20,
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black38,
+                            ),
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.arrow_back_ios_rounded,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 20,
+                          right: 20,
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black38,
+                            ),
+                            alignment: Alignment.center,
+                            child: SvgPicture.asset(
+                              AppImages.heartAdd,
+                              fit: BoxFit.contain,
+                              width: 30,
                               height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.orange,
-                              ),
-                              alignment: Alignment.center,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    "4.5",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
+                              colorFilter: ColorFilter.mode(
+                                Colors.white,
+                                BlendMode.srcIn,
                               ),
                             ),
-                            SizedBox(width: 10),
-                            Container(
-                              width: 60,
-                              height: 30,
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 20,
+                          left: 20,
+                          right: 20,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: EdgeInsets.all(2),
+                              margin: EdgeInsets.only(bottom: 10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.shade400,
+                                color: Colors.black38,
                               ),
-                              alignment: Alignment.center,
                               child: Text(
-                                "Italian",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                "${detailsResponseModel?.title}",
                                 style: TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 18,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          "Fried Potatoes",
-                          style: TextStyle(
-                            fontSize: 25,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        Positioned(
+                          bottom: -60,
+                          right: 0,
+                          left: 0,
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                ),
+                              ],
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                            ),
+
+                            child: IntrinsicHeight(
+                              child: Row(
+                                children: [
+                                  InfoItem(
+                                    text:
+                                        "${nutritionResponseModel?.calories ?? 0} Kcal",
+                                    icon: AppImages.kcal,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  VerticalDivider(
+                                    color: Colors.orange.shade100,
+                                    thickness: 1,
+                                  ),
+                                  InfoItem(
+                                    text:
+                                        "${detailsResponseModel?.readyInMinutes} mins",
+                                    icon: AppImages.time,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  VerticalDivider(
+                                    color: Colors.orange.shade100,
+                                    thickness: 1,
+                                  ),
+                                  InfoItem(
+                                    text: "${detailsResponseModel?.servings}",
+                                    icon: AppImages.serving,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  VerticalDivider(
+                                    color: Colors.orange.shade100,
+                                    thickness: 1,
+                                  ),
+                                  InfoItem(
+                                    text:
+                                        " ${detailsResponseModel?.pricePerServing}\$",
+                                    icon: AppImages.price,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  Positioned(
-                    bottom: -60,
-                    right: 0,
-                    left: 0,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            spreadRadius: 5,
-                            blurRadius: 7,
+                  SliverToBoxAdapter(child: SizedBox(height: 90)),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Ingredients",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Spacer(),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.shade50,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              "${detailsResponseModel?.extendedIngredients?.length ?? 0} items",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange,
+                              ),
+                            ),
                           ),
                         ],
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-
-                      child: IntrinsicHeight(
-                        child: Row(
-                          children: [
-                            InfoItem(text: "120 kcal", icon: AppImages.kcal),
-                            const SizedBox(width: 5),
-                            VerticalDivider(
-                              color: Colors.orange.shade100,
-                              thickness: 1,
-                            ),
-                            InfoItem(text: "20 min", icon: AppImages.time),
-                            const SizedBox(width: 5),
-                            VerticalDivider(
-                              color: Colors.orange.shade100,
-                              thickness: 1,
-                            ),
-                            InfoItem(
-                              text: "4 serving",
-                              icon: AppImages.serving,
-                            ),
-                            const SizedBox(width: 5),
-                            VerticalDivider(
-                              color: Colors.orange.shade100,
-                              thickness: 1,
-                            ),
-                            InfoItem(text: "4.5", icon: AppImages.price),
-                          ],
-                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            SliverToBoxAdapter(child: SizedBox(height: 90)),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Text(
-                      "Ingredients",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Spacer(),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.shade50,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        "6 items",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 20,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.orange.shade50, width: 2),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              AppImages.recipe,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: 105,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          "Fried Potatoes",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "200g",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.orange,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                childCount: 6,
-              ),
-            ),
-            SliverToBoxAdapter(child: SizedBox(height: 15)),
-            SliverToBoxAdapter(
-              child: Text(
-                " Kitchen Gear Needed",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.brown.shade300,
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(child: SizedBox(height: 5)),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 70,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  itemCount: 5,
-                  itemBuilder: (context, index) => KitchenGearNeeded(),
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(width: 10),
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(child: SizedBox(height: 20)),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Nutrition Deep Dive ",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: NutritionInfoWidget(
-                  calories: 1731,
-                  caloriesTotal: 2500,
-                  // Assumed total
-                  protein: 72,
-                  proteinTotal: 100,
-                  // Assumed total
-                  carbs: 252,
-                  carbsTotal: 300,
-                  // Assumed total
-                  fats: 61,
-                  fatsTotal: 80, // Assumed total
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(child: SizedBox(height: 20)),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Text(
-                      "Similar Recipe",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Spacer(),
-                    Row(
-                      children: [
-                        Text(
-                          "View All",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange,
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.symmetric(horizontal: 5),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.orange.shade50,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            color: Colors.orange,
-                            size: 20,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 300,
-                child: ListView.separated(
-                          scrollDirection:  Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder:  (context, index) =>  Align(
-                    alignment: Alignment.center,
-                    child: Card(
-                      color:  Colors.white,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Stack(
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 170,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: 150,
+                            color: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.asset(
-                                    AppImages.recipe,
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: CachedRecipeImage(
+                                    imageUrl:
+                                        "https://spoonacular.com/cdn/ingredients_500x500/${detailsResponseModel?.extendedIngredients?[index].image ?? ""}",
+                                    height: 80.0,
                                     fit: BoxFit.cover,
-                                    width: 200,
-                                    height: 200,
                                   ),
                                 ),
-                                Positioned(
-                                  top: 5,
-                                  right: 5,
-                                  child: Container(
-                                    width: 60,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.black54,
-                                    ),
-
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-
-                                      children: [
-                                        Icon(Icons.star, color: Colors.white, size: 20),
-                                        SizedBox(width: 5),
-                                        Text(
-                                          "4.5",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                Text(
+                                  " ${detailsResponseModel?.extendedIngredients?[index].name ?? ""}",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  " ${detailsResponseModel?.extendedIngredients?[index].original ?? ""}",
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 5),
-                            Text(
-                              "Fried Potatoes",
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              "200g | 380kcl",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.orange,
-                                fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        separatorBuilder: (context, index) =>
+                            SizedBox(width: 5),
+                        itemCount:
+                            detailsResponseModel?.extendedIngredients?.length ??
+                            0,
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(child: SizedBox(height: 15)),
+                  (equipmentResponseModel != null &&
+                          equipmentResponseModel.isNotEmpty)
+                      ? SliverToBoxAdapter(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                " Kitchen Gear Needed",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.brown.shade300,
+                                ),
                               ),
-                            ),
-                          ],
+                              SizedBox(height: 5),
+                              SizedBox(
+                                height: 100,
+                                child: ListView.separated(
+                                  scrollDirection: Axis.horizontal,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                  ),
+                                  itemCount: equipmentResponseModel.length,
+                                  itemBuilder: (context, index) =>
+                                      KitchenGearNeeded(
+                                        equipmentResponseModel,
+                                        index,
+                                      ),
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(width: 10),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                            ],
+                          ),
+                        )
+                      : SliverToBoxAdapter(child: SizedBox.shrink()),
+                  SliverToBoxAdapter(
+                    child: AnalyzedInstructionsWidget(
+                      instructions:
+                          detailsResponseModel?.analyzedInstructions ?? [],
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Nutrition Deep Dive ",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
                     ),
                   ),
-                  separatorBuilder: (context, index) => SizedBox( width:  5,) ,
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: NutritionInfoWidget(
+                        calories: nutritionResponseModel?.caloriesInt ?? 0,
+                        caloriesTotal: 2500,
 
+                        protein: nutritionResponseModel?.proteinInt ?? 0,
+                        proteinTotal: 100,
+
+                        carbs: nutritionResponseModel?.carbsInt ?? 0,
+                        carbsTotal: 300,
+
+                        fats: nutritionResponseModel?.fatInt ?? 0,
+                        fatsTotal: 80,
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(child: SizedBox(height: 20)),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Similar Recipe",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
-              )),
-            SliverToBoxAdapter(child: SizedBox(height: 20)),
-          ],
+                          ),
+                          Spacer(),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.viewAllSimilar,
+                                arguments: similarResponseModel,
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  "View All",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5,
+                                    vertical: 5,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade50,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: Colors.orange,
+                                    size: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 250,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount:  similarResponseModel?.length??0,
+                        itemBuilder: (context, index) => Align(
+                          alignment: Alignment.center,
+                          child: SimilarItem( similarResponseModel,index),
+                        ),
+                        separatorBuilder: (context, index) =>
+                            SizedBox(width: 5),
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(child: SizedBox(height: 20)),
+                ],
+              );
+            } else if (state is DetailsErrorState) {
+              return Center(child: Text(state.errMessage));
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
         ),
       ),
     );
   }
 }
+
+

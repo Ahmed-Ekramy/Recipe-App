@@ -37,6 +37,15 @@ class DrinkErrorState extends HomeTabState{
   final String errMessage;
   DrinkErrorState(this.errMessage);
 }
+class CategoryLoadingState extends HomeTabState{}
+class CategorySuccessState extends HomeTabState{
+  final List<RandomEntity> randomEntity;
+  CategorySuccessState(this.randomEntity);
+}
+class CategoryErrorState extends HomeTabState{
+  final String errMessage;
+  CategoryErrorState(this.errMessage);
+}
 
 
 

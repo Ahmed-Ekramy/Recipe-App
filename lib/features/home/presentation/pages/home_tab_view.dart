@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recipe/config/routes/routes.dart';
 import 'package:recipe/core/api/dio_consumer.dart';
 import 'package:recipe/core/utils/app_images.dart';
 import 'package:recipe/features/home/data/data_sources/home_remote.dart';
@@ -15,16 +16,16 @@ class HomeTabView extends StatelessWidget {
   HomeTabView({super.key});
 
   final List menuList = [
-    MenuModel("Pizza", AppImages.pizza),
-    MenuModel("Burger", AppImages.burger),
-    MenuModel("Meat", AppImages.meat),
-    MenuModel("Fish", AppImages.fish),
-    MenuModel("Chicken", AppImages.chicken),
-    MenuModel("Pasta", AppImages.pasta),
-    MenuModel("Soups", AppImages.soups),
-    MenuModel("Noodles", AppImages.noodles),
-    MenuModel("Vegetarian", AppImages.vegetarian),
-    MenuModel("Baking", AppImages.baking),
+    MenuModel("pizza", AppImages.pizza),
+    MenuModel("burger", AppImages.burger),
+    MenuModel("meat", AppImages.meat),
+    MenuModel("fish", AppImages.fish),
+    MenuModel("chicken", AppImages.chicken),
+    MenuModel("pasta", AppImages.pasta),
+    MenuModel("soups", AppImages.soups),
+    MenuModel("noodles", AppImages.noodles),
+    MenuModel("vegetarian", AppImages.vegetarian),
+    MenuModel("baking", AppImages.baking),
   ];
 
   @override
@@ -33,7 +34,10 @@ class HomeTabView extends StatelessWidget {
       child: BlocProvider(
         create: (context) =>
             HomeTabCubit(HomeRemote(api: DioConsumer(dio: Dio())))
-              ..breakFastRecipe()..lunchRecipe()..dinnerRecipe()..drinkRecipe(),
+              ..breakFastRecipe()
+              ..lunchRecipe()
+              ..dinnerRecipe()
+              ..drinkRecipe(),
         child: BlocBuilder<HomeTabCubit, HomeTabState>(
           builder: (context, state) {
             var cubit = HomeTabCubit.get(context);
@@ -45,7 +49,10 @@ class HomeTabView extends StatelessWidget {
             if (state is BreakFastLoadingState) {
               return Center(child: CircularProgressIndicator());
             }
-            if (state is BreakFastSuccessState || state is LunchSuccessState || state is DinnerSuccessState || state is DrinkSuccessState) {
+            if (state is BreakFastSuccessState ||
+                state is LunchSuccessState ||
+                state is DinnerSuccessState ||
+                state is DrinkSuccessState) {
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 child: Column(
@@ -84,7 +91,17 @@ class HomeTabView extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         itemCount: menuList.length,
                         itemBuilder: (context, index) =>
-                            MenuItem(menuList: menuList, index: index),
+                            InkWell(
+                              onTap:  (){
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.viewAllCategory,
+                                  arguments: {
+                                    "category": menuList[index].text,
+                                  },
+                                );
+                              },
+                                child: MenuItem(menuList: menuList, index: index)),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -94,16 +111,44 @@ class HomeTabView extends StatelessWidget {
                         Text(
                           "Popular Breakfast",
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          "See all",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange.shade300,
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              'viewAll',
+                              arguments: breakFastList,
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.orange.shade50,
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "See All",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange.shade300,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Colors.orange.shade300,
+                                  size: 15,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -113,7 +158,8 @@ class HomeTabView extends StatelessWidget {
                       height: 220,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => PopularBreakfastItem( breakFastList, index),
+                        itemBuilder: (context, index) =>
+                            PopularBreakfastItem(breakFastList, index),
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 10),
                         itemCount: breakFastList.length,
@@ -130,12 +176,40 @@ class HomeTabView extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          "See all",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange.shade300,
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              'viewAll',
+                              arguments: lunchList,
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.orange.shade50,
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "See All",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange.shade300,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Colors.orange.shade300,
+                                  size: 15,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -146,10 +220,15 @@ class HomeTabView extends StatelessWidget {
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) => InkWell(
-                            onTap: (){
-                              Navigator.pushNamed(context, 'recipeDetails' ,arguments: lunchList[index]);
-                            },
-                            child: PopularBreakfastItem( lunchList, index)),
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              'recipeDetails',
+                              arguments: lunchList[index],
+                            );
+                          },
+                          child: PopularBreakfastItem(lunchList, index),
+                        ),
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 10),
                         itemCount: lunchList.length,
@@ -166,12 +245,40 @@ class HomeTabView extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          "See all",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange.shade300,
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              'viewAll',
+                              arguments: dinnerList,
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.orange.shade50,
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "See All",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange.shade300,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Colors.orange.shade300,
+                                  size: 15,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -181,10 +288,11 @@ class HomeTabView extends StatelessWidget {
                       height: 220,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => PopularBreakfastItem( dinnerList, index),
+                        itemBuilder: (context, index) =>
+                            PopularBreakfastItem(dinnerList, index),
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 10),
-                        itemCount: dinnerList.length,
+                        itemCount: 10,
                       ),
                     ),
                     SizedBox(height: 10),
@@ -198,24 +306,58 @@ class HomeTabView extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          "See all",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange.shade300,
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              'viewAll',
+                              arguments: drinkList,
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.orange.shade50,
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "See All",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange.shade300,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Colors.orange.shade300,
+                                  size: 15,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
+                    SizedBox(height: 10),
                     ListView.separated(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) => InkWell(
-                          onTap: (){
-                            Navigator.pushNamed(context, 'recipeDetails' ,arguments: drinkList[index]);
-                          },
-                          child: DrinkItem( drinkList, index)),
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            'recipeDetails',
+                            arguments: drinkList[index],
+                          );
+                        },
+                        child: DrinkItem(drinkList, index),
+                      ),
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 10),
                       itemCount: drinkList.length,
