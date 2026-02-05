@@ -39,7 +39,7 @@ class SearchView extends StatelessWidget {
                 focusedBorderColor: Colors.orange,
                 enabledBorderColor: Colors.white70,
                 onFieldSubmitted: (value) {
-                   BlocProvider.of<SearchCubit>(context).autoSearch(value);
+                  Navigator.pushNamed(context, 'searchResult', arguments: value);
                 },
                 prefixIcon: SizedBox(
                   width: 30,
@@ -77,12 +77,12 @@ class SearchView extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Text(
                 " Search Suggestions",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               BlocBuilder<SearchCubit, SearchState>(
                 builder: (context, state) {
                   SearchCubit cubit = BlocProvider.of<SearchCubit>(context);
@@ -98,8 +98,14 @@ class SearchView extends StatelessWidget {
                       itemCount: autoSearchList.length,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) => SearchResultItem(
-                          autoSearchList[index]
+                      itemBuilder: (context, index) => InkWell(
+                        onTap: () {
+                          cubit.searchController.text = autoSearchList[index].title??"";
+                          Navigator.pushNamed(context, 'searchResult', arguments: autoSearchList[index].title);
+                        },
+                        child: SearchResultItem(
+                            autoSearchList[index]
+                        ),
                       ),
                       separatorBuilder: (context, index) => SizedBox(height: 10),
                     );
