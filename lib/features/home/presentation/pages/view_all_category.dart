@@ -3,17 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:recipe/core/shared_widget/cached_recipe_image.dart';
 import 'package:recipe/core/utils/app_images.dart';
+import 'package:recipe/features/Favorite/data/models/favorite_model.dart';
+import 'package:recipe/features/Favorite/presentation/manager/favorite_cubit.dart';
+import 'package:recipe/features/Favorite/presentation/manager/states.dart';
 import 'package:recipe/features/home/presentation/manager/cubit.dart';
 import 'package:recipe/features/home/presentation/manager/states.dart';
 
 class ViewAllCategory extends StatelessWidget {
-
   const ViewAllCategory({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: BlocBuilder<HomeTabCubit, HomeTabState>(
         builder: (context, state) {
           var cubit = HomeTabCubit.get(context);
@@ -26,95 +27,114 @@ class ViewAllCategory extends StatelessWidget {
                 mainAxisSpacing: 5,
               ),
               itemCount: args.length,
-              itemBuilder: (context, index) =>
-                  Container(
-                    padding: EdgeInsets.all(2),
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, 'recipeDetails', arguments: {
-                          "id": args[index].id,
-                        });
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-            
-                          Expanded(
-                            child: Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: CachedRecipeImage(
-                                    imageUrl: "${args[index].image}",
-                                    height: double.infinity,
-                                    width: 500,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 5,
-                                  right: 5,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    width: 35,
-                                    height: 35,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.white70,
-                                    ),
-                                    child: SvgPicture.asset(
-                                      AppImages.heartAdd,
-                                      fit: BoxFit.contain,
-                                      width: 30,
-                                      height: 30,
-                                      colorFilter: ColorFilter.mode(
-                                        Colors.orange,
-                                        BlendMode.srcIn,
+              itemBuilder: (context, index) => Container(
+                padding: EdgeInsets.all(2),
+                margin: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      'recipeDetails',
+                      arguments: {"id": args[index].id},
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedRecipeImage(
+                                imageUrl: "${args[index].image}",
+                                height: double.infinity,
+                                width: 500,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                            Positioned(
+                              top: 5,
+                              right: 5,
+                              child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                                builder: (context, state) {
+                                  final isFav = FavoriteCubit.get(
+                                    context,
+                                  ).isFavorite(args[index].id);
+                                  return GestureDetector(
+                                    onTap: () {
+                                      FavoriteCubit.get(context).toggleFavorite(
+                                        FavoriteModel(
+                                          id: args[index].id,
+                                          title: "${args[index].title}",
+                                          image: args[index].image,
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: 35,
+                                      height: 35,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white70,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        AppImages.heartAdd,
+                                        fit: BoxFit.contain,
+                                        width: 30,
+                                        height: 30,
+                                        colorFilter: ColorFilter.mode(
+                                          isFav? Colors.orange: Colors.white,
+                                          BlendMode.srcIn,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 4),
+
+                      Text(
+                        "${args[index].title}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+
+                      Row(
+                        children: [
+                          SvgPicture.asset(
+                            AppImages.time,
+                            width: 20,
+                            height: 20,
+                            colorFilter: ColorFilter.mode(
+                              Colors.orange,
+                              BlendMode.srcIn,
                             ),
                           ),
-            
-                          SizedBox(height: 4),
-            
                           Text(
-                            "${args[index].title}",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-            
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                AppImages.time,
-                                width: 20,
-                                height: 20,
-                                colorFilter: ColorFilter.mode(
-                                  Colors.orange,
-                                  BlendMode.srcIn,
-                                ),
-                              ),
-                              Text(
-                                "${args[index].readyInMinutes} mins",
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.black),
-                              ),
-                            ],
+                            "${args[index].readyInMinutes} mins",
+                            style: TextStyle(fontSize: 13, color: Colors.black),
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
+                ),
+              ),
             ),
           );
         },

@@ -21,5 +21,6 @@ final ComplexSearchModel complexSearchModel;
 class ErrorComplexSearchState extends SearchState{
   final String error;
   ErrorComplexSearchState(this.error);
-
 }
+
+class FilterUpdateState extends SearchState{}

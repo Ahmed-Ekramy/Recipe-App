@@ -13,6 +13,29 @@ class SearchRepoImp implements SearchRepo {
 
 
   @override
-  Future<Either<String, ComplexSearchModel>> complexSearch(String query) => searchDataSource.complexSearch(query);
+  Future<Either<String, ComplexSearchModel>> complexSearch(
+    String query, {
+    String? includeIngredients,
+    num? minCalories,
+    num? maxCalories,
+    num? minProtein,
+    num? maxProtein,
+    num? minFat,
+    num? maxFat,
+    num? minCarbs,
+    num? maxCarbs,
+  }) =>
+      searchDataSource.complexSearch(
+        query,
+        includeIngredients: includeIngredients,
+        minCalories: minCalories,
+        maxCalories: maxCalories,
+        minProtein: minProtein,
+        maxProtein: maxProtein,
+        minFat: minFat,
+        maxFat: maxFat,
+        minCarbs: minCarbs,
+        maxCarbs: maxCarbs,
+      );
 
 }

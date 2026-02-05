@@ -11,6 +11,9 @@ import 'package:recipe/features/details/presentation/widgets/kitchen_gear_needed
 import 'package:recipe/features/details/presentation/widgets/nutrition_info_widget.dart';
 import 'package:recipe/features/details/presentation/widgets/similar_item.dart';
 import 'package:recipe/features/details/presentation/widgets/instructions_widget.dart';
+import 'package:recipe/features/Favorite/presentation/manager/favorite_cubit.dart';
+import 'package:recipe/features/Favorite/presentation/manager/states.dart';
+import 'package:recipe/features/Favorite/data/models/favorite_model.dart';
 
 class RecipeDetails extends StatelessWidget {
   final int id;
@@ -71,24 +74,43 @@ class RecipeDetails extends StatelessWidget {
                         Positioned(
                           top: 20,
                           right: 20,
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.black38,
-                            ),
-                            alignment: Alignment.center,
-                            child: SvgPicture.asset(
-                              AppImages.heartAdd,
-                              fit: BoxFit.contain,
-                              width: 30,
-                              height: 30,
-                              colorFilter: ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
-                              ),
-                            ),
+                          child: BlocBuilder<FavoriteCubit, FavoriteState>(
+                            builder: (context, favState) {
+                              final isFav = FavoriteCubit.get(context).isFavorite(id);
+                              return GestureDetector(
+                                onTap: () {
+                                  if (detailsResponseModel != null) {
+                                    FavoriteCubit.get(context).toggleFavorite(
+                                      FavoriteModel(
+                                        id: detailsResponseModel.id ?? 0,
+                                        title: detailsResponseModel.title ?? '',
+                                        image: detailsResponseModel.image ?? '',
+                                        readyInMinutes: detailsResponseModel.readyInMinutes,
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black38,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: SvgPicture.asset(
+                                    AppImages.heartAdd,
+                                    fit: BoxFit.contain,
+                                    width: 30,
+                                    height: 30,
+                                    colorFilter: ColorFilter.mode(
+                                      isFav ? Colors.orange : Colors.white,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                         Positioned(
@@ -138,23 +160,24 @@ class RecipeDetails extends StatelessWidget {
 
                             child: IntrinsicHeight(
                               child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   InfoItem(
                                     text:
                                         "${nutritionResponseModel?.calories ?? 0} Kcal",
                                     icon: AppImages.kcal,
                                   ),
-                                  const SizedBox(width: 5),
+                                  const SizedBox(width: 2),
                                   VerticalDivider(
                                     color: Colors.orange.shade100,
                                     thickness: 1,
                                   ),
                                   InfoItem(
                                     text:
-                                        "${detailsResponseModel?.readyInMinutes} mins",
+                                        "${detailsResponseModel?.readyInMinutes} m",
                                     icon: AppImages.time,
                                   ),
-                                  const SizedBox(width: 5),
+                                  const SizedBox(width: 2),
                                   VerticalDivider(
                                     color: Colors.orange.shade100,
                                     thickness: 1,
@@ -163,7 +186,7 @@ class RecipeDetails extends StatelessWidget {
                                     text: "${detailsResponseModel?.servings}",
                                     icon: AppImages.serving,
                                   ),
-                                  const SizedBox(width: 5),
+                                  const SizedBox(width: 2),
                                   VerticalDivider(
                                     color: Colors.orange.shade100,
                                     thickness: 1,

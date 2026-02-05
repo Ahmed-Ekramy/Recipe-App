@@ -30,13 +30,40 @@ class SearchRemote implements SearchDataSource {
   }
 
   @override
-  Future<Either<String, ComplexSearchModel>> complexSearch(String query)async {
+  Future<Either<String, ComplexSearchModel>> complexSearch(
+    String query, {
+    String? includeIngredients,
+    num? minCalories,
+    num? maxCalories,
+    num? minProtein,
+    num? maxProtein,
+    num? minFat,
+    num? maxFat,
+    num? minCarbs,
+    num? maxCarbs,
+  }) async {
     try {
+      final queryParams = {
+        "number": 30,
+        "query": query,
+        if (includeIngredients != null && includeIngredients.isNotEmpty)
+          "includeIngredients": includeIngredients,
+        if (minCalories != null) "minCalories": minCalories,
+        if (maxCalories != null) "maxCalories": maxCalories,
+        if (minProtein != null) "minProtein": minProtein,
+        if (maxProtein != null) "maxProtein": maxProtein,
+        if (minFat != null) "minFat": minFat,
+        if (maxFat != null) "maxFat": maxFat,
+        if (minCarbs != null) "minCarbs": minCarbs,
+        if (maxCarbs != null) "maxCarbs": maxCarbs,
+      };
+
       var response = await apiConsumer.get(
         EndPoint.complexSearch,
-        queryParameters: {"number": 30, "query": query},
+        queryParameters: queryParams,
       );
-      ComplexSearchModel complexSearchModel = ComplexSearchModel.fromJson(response);
+      ComplexSearchModel complexSearchModel =
+          ComplexSearchModel.fromJson(response);
       return Right(complexSearchModel);
     } on ServerException catch (e) {
       return Left(e.toString());

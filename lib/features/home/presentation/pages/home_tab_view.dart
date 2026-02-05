@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recipe/config/routes/routes.dart';
 import 'package:recipe/core/api/dio_consumer.dart';
 import 'package:recipe/core/utils/app_images.dart';
+import 'package:recipe/features/Favorite/presentation/manager/states.dart';
 import 'package:recipe/features/home/data/data_sources/home_remote.dart';
 import 'package:recipe/features/home/presentation/manager/cubit.dart';
 import 'package:recipe/features/home/presentation/manager/states.dart';
@@ -52,7 +53,7 @@ class HomeTabView extends StatelessWidget {
             if (state is BreakFastSuccessState ||
                 state is LunchSuccessState ||
                 state is DinnerSuccessState ||
-                state is DrinkSuccessState) {
+                state is DrinkSuccessState ) {
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 child: Column(
@@ -292,7 +293,7 @@ class HomeTabView extends StatelessWidget {
                             PopularBreakfastItem(dinnerList, index),
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 10),
-                        itemCount: 10,
+                        itemCount: dinnerList.length,
                       ),
                     ),
                     SizedBox(height: 10),

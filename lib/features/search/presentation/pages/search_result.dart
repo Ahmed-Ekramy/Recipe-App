@@ -5,6 +5,9 @@ import 'package:recipe/core/shared_widget/cached_recipe_image.dart';
 import 'package:recipe/core/utils/app_images.dart';
 import 'package:recipe/features/search/presentation/manager/cubit.dart';
 import 'package:recipe/features/search/presentation/manager/states.dart';
+import 'package:recipe/features/Favorite/presentation/manager/favorite_cubit.dart';
+import 'package:recipe/features/Favorite/presentation/manager/states.dart';
+import 'package:recipe/features/Favorite/data/models/favorite_model.dart';
 
 class SearchResult extends StatelessWidget {
   const SearchResult({super.key});
@@ -16,89 +19,115 @@ class SearchResult extends StatelessWidget {
         child: BlocBuilder<SearchCubit, SearchState>(
           builder: (context, state) {
             if (state is LoadingComplexSearchState) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
             if (state is SuccessComplexSearchState) {
-             var resultComplexSearchModel = state.complexSearchModel.results;
+              var resultComplexSearchModel = state.complexSearchModel.results;
               return GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 1,
                   mainAxisSpacing: 5,
                 ),
-                itemCount:resultComplexSearchModel?.length,
-                itemBuilder: (context, index) => Container(
-                  padding: EdgeInsets.all(2),
-                  margin: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        'recipeDetails',
-                        arguments: {"id": resultComplexSearchModel?[index].id},
-                      );
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: CachedRecipeImage(
-                                  imageUrl: "${resultComplexSearchModel?[index].image}",
-                                  height: double.infinity,
-                                  width: 500,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                              Positioned(
-                                top: 5,
-                                right: 5,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: 35,
-                                  height: 35,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white70,
-                                  ),
-                                  child: SvgPicture.asset(
-                                    AppImages.heartAdd,
-                                    fit: BoxFit.contain,
-                                    width: 30,
-                                    height: 30,
-                                    colorFilter: ColorFilter.mode(
-                                      Colors.orange,
-                                      BlendMode.srcIn,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        SizedBox(height: 4),
-
-                        Text(
-                          "${resultComplexSearchModel?[index].title}",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                itemCount: resultComplexSearchModel?.length,
+                itemBuilder: (context, index) {
+                  final recipe = resultComplexSearchModel![index];
+                  return Container(
+                    padding: const EdgeInsets.all(2),
+                    margin: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
                     ),
-                  ),
-                ),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          'recipeDetails',
+                          arguments: {"id": recipe.id},
+                        );
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: CachedRecipeImage(
+                                    imageUrl: "${recipe.image}",
+                                    height: double.infinity,
+                                    width: 500,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 5,
+                                  right: 5,
+                                  child:
+                                      BlocBuilder<FavoriteCubit, FavoriteState>(
+                                        builder: (context, favState) {
+                                          final isFav = FavoriteCubit.get(
+                                            context,
+                                          ).isFavorite(recipe.id ?? 0);
+                                          return GestureDetector(
+                                            onTap: () {
+                                              FavoriteCubit.get(
+                                                context,
+                                              ).toggleFavorite(
+                                                FavoriteModel(
+                                                  id: recipe.id ?? 0,
+                                                  title: recipe.title ?? '',
+                                                  image: recipe.image ?? '',
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              width: 35,
+                                              height: 35,
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.black12,
+                                              ),
+                                              child: SvgPicture.asset(
+                                                AppImages.heartAdd,
+                                                fit: BoxFit.contain,
+                                                width: 30,
+                                                height: 30,
+                                                colorFilter: ColorFilter.mode(
+                                                  isFav
+                                                      ? Colors.orange
+                                                      : Colors.white,
+                                                  BlendMode.srcIn,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(height: 4),
+
+                          Text(
+                            "${resultComplexSearchModel[index].title}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               );
             }
             if (state is ErrorComplexSearchState) {
