@@ -11,17 +11,13 @@ String planModelToJson(PlanModel data) => json.encode(data.toJson());
 class PlanModel {
   Week? week;
 
-  PlanModel({
-    this.week,
-  });
+  PlanModel({this.week});
 
   factory PlanModel.fromJson(Map<String, dynamic> json) => PlanModel(
     week: json["week"] == null ? null : Week.fromJson(json["week"]),
   );
 
-  Map<String, dynamic> toJson() => {
-    "week": week?.toJson(),
-  };
+  Map<String, dynamic> toJson() => {"week": week?.toJson()};
 }
 
 class Week {
@@ -46,7 +42,9 @@ class Week {
   factory Week.fromJson(Map<String, dynamic> json) => Week(
     monday: json["monday"] == null ? null : Day.fromJson(json["monday"]),
     tuesday: json["tuesday"] == null ? null : Day.fromJson(json["tuesday"]),
-    wednesday: json["wednesday"] == null ? null : Day.fromJson(json["wednesday"]),
+    wednesday: json["wednesday"] == null
+        ? null
+        : Day.fromJson(json["wednesday"]),
     thursday: json["thursday"] == null ? null : Day.fromJson(json["thursday"]),
     friday: json["friday"] == null ? null : Day.fromJson(json["friday"]),
     saturday: json["saturday"] == null ? null : Day.fromJson(json["saturday"]),
@@ -68,18 +66,21 @@ class Day {
   List<Meal>? meals;
   Nutrients? nutrients;
 
-  Day({
-    this.meals,
-    this.nutrients,
-  });
+  Day({this.meals, this.nutrients});
 
   factory Day.fromJson(Map<String, dynamic> json) => Day(
-    meals: json["meals"] == null ? [] : List<Meal>.from(json["meals"]!.map((x) => Meal.fromJson(x))),
-    nutrients: json["nutrients"] == null ? null : Nutrients.fromJson(json["nutrients"]),
+    meals: json["meals"] == null
+        ? []
+        : List<Meal>.from(json["meals"]!.map((x) => Meal.fromJson(x))),
+    nutrients: json["nutrients"] == null
+        ? null
+        : Nutrients.fromJson(json["nutrients"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "meals": meals == null ? [] : List<dynamic>.from(meals!.map((x) => x.toJson())),
+    "meals": meals == null
+        ? []
+        : List<dynamic>.from(meals!.map((x) => x.toJson())),
     "nutrients": nutrients?.toJson(),
   };
 }
@@ -105,7 +106,8 @@ class Meal {
 
   factory Meal.fromJson(Map<String, dynamic> json) => Meal(
     id: json["id"],
-    image: json["image"],
+    image:
+        "https://spoonacular.com/recipeImages/${json['id']}-556x370.${json['imageType']}",
     imageType: json["imageType"],
     title: json["title"],
     readyInMinutes: json["readyInMinutes"],
@@ -130,12 +132,7 @@ class Nutrients {
   double? fat;
   double? carbohydrates;
 
-  Nutrients({
-    this.calories,
-    this.protein,
-    this.fat,
-    this.carbohydrates,
-  });
+  Nutrients({this.calories, this.protein, this.fat, this.carbohydrates});
 
   factory Nutrients.fromJson(Map<String, dynamic> json) => Nutrients(
     calories: json["calories"]?.toDouble(),

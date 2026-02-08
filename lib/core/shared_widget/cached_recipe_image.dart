@@ -28,9 +28,10 @@ class CachedRecipeImage extends StatelessWidget {
         color: Colors.grey[300],
         child: Center(
           child: CircularProgressIndicator(
+            color: Colors.orange.shade100,
             strokeWidth: 2,
             valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).primaryColor,
+              Colors.orange.shade100,
             ),
           ),
         ),
@@ -43,7 +44,7 @@ class CachedRecipeImage extends StatelessWidget {
             Icon(
               Icons.restaurant,
               size: 48,
-              color: Colors.grey[400],
+              color: Colors.orange.shade300,
             ),
             const SizedBox(height: 8),
             Text(

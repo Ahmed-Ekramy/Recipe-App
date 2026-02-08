@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recipe/config/routes/routes.dart';
 import 'package:recipe/core/api/api_consumer.dart';
 import 'package:recipe/core/api/dio_consumer.dart';
 import 'package:recipe/core/shared_widget/custom_button.dart';
@@ -109,12 +110,25 @@ class MealPlanView extends StatelessWidget {
                     }),
                   ),
                   SizedBox(height: 15),
-                  CustomElevButton(
-                    colorButton: Colors.orange,
-                    onPressed: () {
-                      context.read<PlanCubit>().getPlan();
+                  BlocListener<PlanCubit, PlanState>(
+                    listener: (context, state) {
+                      if (state is PlanSuccess) {
+                        Navigator.pushNamed(context, "getPlan", arguments: state.planModel);
+                      } else if (state is PlanError) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(state.errMessage)),
+                        );
+                      }
                     },
-                    buttonName: "Get Plan",
+                    child: state is PlanLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : CustomElevButton(
+                            colorButton: Colors.orange,
+                            onPressed: () {
+                              context.read<PlanCubit>().getPlan();
+                            },
+                            buttonName: "Get Plan",
+                          ),
                   ),
                   SizedBox(height: 10),
                 ],

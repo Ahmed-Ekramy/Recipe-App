@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recipe/features/Favorite/presentation/pages/favorite_view.dart';
 import 'package:recipe/features/home/presentation/pages/home_tab_view.dart';
 import 'package:recipe/features/home_layout/presentation/manager/states.dart';
-import 'package:recipe/features/mael_plan/presentation/meal_plan_view.dart';
+import 'package:recipe/features/mael_plan/presentation/pages/meal_plan_view.dart';
 import 'package:recipe/features/search/presentation/pages/search_view.dart';
 
 class HomeLayoutCubit extends Cubit<HomeLayoutState> {

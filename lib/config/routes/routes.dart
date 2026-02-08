@@ -17,6 +17,10 @@ import 'package:recipe/features/home/presentation/pages/view_all.dart';
 import 'package:recipe/features/home/presentation/pages/view_all_category.dart';
 import 'package:recipe/features/home_layout/presentation/manager/cubit.dart';
 import 'package:recipe/features/home_layout/presentation/pages/home_layout_view.dart';
+import 'package:recipe/features/mael_plan/data/data_sources/plan_remote.dart';
+import 'package:recipe/features/mael_plan/data/models/plan_model.dart';
+import 'package:recipe/features/mael_plan/presentation/manager/cubit.dart';
+import 'package:recipe/features/mael_plan/presentation/pages/get_plane_view.dart';
 import 'package:recipe/features/search/data/data_sources/search_remote.dart';
 import 'package:recipe/features/search/presentation/manager/cubit.dart';
 import 'package:recipe/features/search/presentation/pages/filter_search_view.dart';
@@ -37,6 +41,7 @@ class Routes {
   static const String viewAllSimilar = "viewAllSimilar";
   static const String viewAllCategory = "viewAllCategory";
   static const String searchResult = "searchResult";
+  static const String getPlan = "getPlan";
 }
 
 class AppRoutes {
@@ -51,14 +56,19 @@ class AppRoutes {
             );
           },
         );
+      case (Routes.getPlan):
+        final args = routeSettings.arguments as PlanModel;
+        return MaterialPageRoute(
+          builder: (context) {
+            return GetPlaneView(planModel: args);
+          },
+        );
       case (Routes.searchResult):
         final args = routeSettings.arguments;
         if (args is SearchCubit) {
           return MaterialPageRoute(
-            builder: (context) => BlocProvider.value(
-              value: args,
-              child: const SearchResult(),
-            ),
+            builder: (context) =>
+                BlocProvider.value(value: args, child: const SearchResult()),
           );
         }
         final query = args as String? ?? "";
@@ -67,9 +77,7 @@ class AppRoutes {
             return BlocProvider(
               create: (context) => SearchCubit(
                 SearchRemote(apiConsumer: DioConsumer(dio: Dio())),
-              )..complexSearch(
-                  query,
-                ),
+              )..complexSearch(query),
               child: const SearchResult(),
             );
           },
@@ -80,13 +88,12 @@ class AppRoutes {
       case (Routes.viewAllCategory):
         final args = routeSettings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-          builder: (context) =>
-              BlocProvider(
-                create: (context) =>
+          builder: (context) => BlocProvider(
+            create: (context) =>
                 HomeTabCubit(HomeRemote(api: DioConsumer(dio: Dio())))
                   ..categoryRecipe(args['category']),
-                child: ViewAllCategory(),
-              ),
+            child: ViewAllCategory(),
+          ),
         );
       case (Routes.viewAllSimilar):
         final args = routeSettings.arguments as List<SimilarResponseModel>;
@@ -118,8 +125,7 @@ class AppRoutes {
             return BlocProvider(
               create: (context) => SearchCubit(
                 SearchRemote(apiConsumer: DioConsumer(dio: Dio())),
-              )
-                ..resetFilters(),
+              )..resetFilters(),
               child: FilterSearchView(),
             );
           },
@@ -131,11 +137,11 @@ class AppRoutes {
             int id = args['id'];
             return BlocProvider(
               create: (context) =>
-              DetailsCubit(DetailsRemote(DioConsumer(dio: Dio())))
-                ..getDetails(id)
-                ..getEquipment(id)
-                ..getNutrition(id)
-                ..getSimilar(id),
+                  DetailsCubit(DetailsRemote(DioConsumer(dio: Dio())))
+                    ..getDetails(id)
+                    ..getEquipment(id)
+                    ..getNutrition(id)
+                    ..getSimilar(id),
               child: RecipeDetails(id: id),
             );
           },
