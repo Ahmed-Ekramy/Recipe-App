@@ -36,7 +36,17 @@ class HomeLayoutView extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             leading:  Icon(Icons.arrow_back_ios_new_outlined),
-          ):null,
+          ):cubit.currentIndex==3?
+          AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            centerTitle: true,
+            title: Text(
+              "Meal Plan",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            leading:  Icon(Icons.arrow_back_ios_new_outlined),
+          )  :null,
           bottomNavigationBar: BottomNavigationBar(
             elevation: 0,
             backgroundColor: Colors.white,
@@ -98,6 +108,22 @@ class HomeLayoutView extends StatelessWidget {
                 ),
                 label: "Favorite",
               ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  cubit.currentIndex == 3
+                      ? AppImages.schedule
+                      : AppImages.schedule,
+                  colorFilter: ColorFilter.mode(
+                    cubit.currentIndex == 3
+                        ? Colors.orange
+                        : Colors.grey.shade500,
+                    BlendMode.srcIn,
+                  ),
+                  width: 25,
+                  height: 25,
+                    ),
+                label: "Plan",
+              )
             ],
           ),
           body: SafeArea(child: cubit.screens[cubit.currentIndex]),

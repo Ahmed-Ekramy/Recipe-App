@@ -24,5 +24,6 @@ class AppImages{
   static String homeClose="assets/svg/home-close-com.svg";
   static String homeOpen="assets/svg/home-open-com.svg";
   static String searchClose="assets/svg/search-close-com.svg";
+  static String schedule="assets/svg/schedule.svg";
 
 }

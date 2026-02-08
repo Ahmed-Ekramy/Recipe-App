@@ -3,6 +3,7 @@ class EndPoint {
   static String recipes = "recipes/random";
   static String autocomplete = "recipes/autocomplete";
   static String complexSearch = "recipes/complexSearch";
+  static String mealPlan = "mealplanner/generate";
   static String recipesDetails ( int id) => "recipes/$id/information";
   static String recipesEquipment ( int id) => "recipes/$id/equipmentWidget.json";
   static String recipesNutrition ( int id) => "recipes/$id/nutritionWidget.json";
